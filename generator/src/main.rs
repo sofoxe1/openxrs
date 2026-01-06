@@ -1494,6 +1494,7 @@ impl Parser {
         let mut event_cases = Vec::new();
         let mut event_decodes = Vec::new();
         let mut event_readers = Vec::new();
+        let mut event_names = Vec::new();
         for (raw_name, evt) in self.structs.iter().filter(|(name, _)| {
             name.starts_with("XrEventData")
                 && !name.ends_with("BaseHeader")
@@ -1502,6 +1503,7 @@ impl Parser {
             let raw_ident = xr_ty_name(raw_name);
             let name = &raw_name["XrEventData".len()..];
             let ident = Ident::new(name, Span::call_site());
+            event_names.push(quote! {Self::#ident(_) => #name,});
             event_cases.push(if evt.members.len() <= 2 {
                 assert_eq!(evt.members.len(), 2);
                 quote! { #ident }
@@ -1657,7 +1659,7 @@ impl Parser {
                 }
             }
 
-            #[derive(Copy, Clone)]
+            #[derive(Copy, Clone, Debug)]
             #[non_exhaustive]
             pub enum Event<'a> {
                 #(#event_cases,)*
@@ -1679,6 +1681,11 @@ impl Parser {
                             #(#event_decodes)*
                             _ => { return None; }
                         })
+                    }
+                }
+                pub const fn name(&self)->&'static str{
+                    match self{
+                        #(#event_names)*
                     }
                 }
             }
@@ -2107,10 +2114,9 @@ impl Parser {
                 }
             })
         });
-
         let sys_raw_ident_str = format!("[sys::{}]", raw_ident);
         quote! {
-            #[derive(Copy, Clone)]
+            #[derive(Copy, Clone, Debug)]
             pub struct #ident<'a>(&'a sys::#raw_ident);
 
             impl<'a> #ident<'a> {
