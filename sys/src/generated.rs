@@ -70,7 +70,7 @@ pub const MAX_SPATIAL_ANCHOR_NAME_SIZE_HTC: usize = 256usize;
 pub const NULL_FUTURE_EXT: usize = 0usize;
 #[doc = "See [XrLoaderInterfaceStructs](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrLoaderInterfaceStructs)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct LoaderInterfaceStructs(i32);
 impl LoaderInterfaceStructs {
     pub const UNINTIALIZED: LoaderInterfaceStructs = Self(0i32);
@@ -102,7 +102,7 @@ impl fmt::Debug for LoaderInterfaceStructs {
 }
 #[doc = "Structure type enumerant - see [XrStructureType](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrStructureType)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct StructureType(i32);
 impl StructureType {
     pub const UNKNOWN: StructureType = Self(0i32);
@@ -1063,7 +1063,7 @@ impl fmt::Debug for StructureType {
 }
 #[doc = "Error and return codes - see [XrResult](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrResult)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct Result(i32);
 impl Result {
     #[doc = "Function successfully completed."]
@@ -1805,7 +1805,7 @@ impl fmt::Display for Result {
 impl std::error::Error for Result {}
 #[doc = "Enums to track objects of various types - see [XrObjectType](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrObjectType)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct ObjectType(i32);
 impl ObjectType {
     pub const UNKNOWN: ObjectType = Self(0i32);
@@ -1953,7 +1953,7 @@ impl fmt::Debug for AndroidThreadTypeKHR {
 }
 #[doc = "eye visibility selector - see [XrEyeVisibility](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrEyeVisibility)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct EyeVisibility(i32);
 impl EyeVisibility {
     #[doc = "Display in both eyes."]
@@ -2129,7 +2129,7 @@ impl fmt::Debug for EnvironmentBlendMode {
 }
 #[doc = "See [XrSessionState](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrSessionState)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct SessionState(i32);
 impl SessionState {
     pub const UNKNOWN: SessionState = Self(0i32);
@@ -2222,7 +2222,7 @@ impl fmt::Debug for PerfSettingsSubDomainEXT {
 }
 #[doc = "See [XrPerfSettingsLevelEXT](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrPerfSettingsLevelEXT)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct PerfSettingsLevelEXT(i32);
 impl PerfSettingsLevelEXT {
     #[doc = "Performance settings hint used by the application to indicate that it enters a non-XR section (head-locked / static screen), during which power savings are to be prioritized"]
@@ -2254,7 +2254,7 @@ impl fmt::Debug for PerfSettingsLevelEXT {
 }
 #[doc = "See [XrPerfSettingsNotificationLevelEXT](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrPerfSettingsNotificationLevelEXT)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct PerfSettingsNotificationLevelEXT(i32);
 impl PerfSettingsNotificationLevelEXT {
     #[doc = "Notifies that the sub-domain has reached a level where no further actions other than currently applied are necessary"]
@@ -2336,7 +2336,7 @@ impl fmt::Debug for SpatialGraphNodeTypeMSFT {
 }
 #[doc = "See [XrBlendFactorFB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrBlendFactorFB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct BlendFactorFB(i32);
 impl BlendFactorFB {
     pub const ZERO: BlendFactorFB = Self(0i32);
@@ -2368,7 +2368,7 @@ impl fmt::Debug for BlendFactorFB {
 }
 #[doc = "See [XrSpaceComponentTypeFB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrSpaceComponentTypeFB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct SpaceComponentTypeFB(i32);
 impl SpaceComponentTypeFB {
     #[doc = "Enables tracking the 6 DOF pose of the XrSpace with xrLocateSpace."]
@@ -2414,7 +2414,7 @@ impl fmt::Debug for SpaceComponentTypeFB {
 }
 #[doc = "See [XrWindingOrderFB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrWindingOrderFB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct WindingOrderFB(i32);
 impl WindingOrderFB {
     #[doc = "Winding order is unknown and the runtime cannot make any assumptions on the triangle orientation"]
@@ -2443,7 +2443,7 @@ impl fmt::Debug for WindingOrderFB {
 }
 #[doc = "See [XrPassthroughLayerPurposeFB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrPassthroughLayerPurposeFB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct PassthroughLayerPurposeFB(i32);
 impl PassthroughLayerPurposeFB {
     #[doc = "Reconstruction passthrough (full screen environment)"]
@@ -2475,7 +2475,7 @@ impl fmt::Debug for PassthroughLayerPurposeFB {
 }
 #[doc = "See [XrSpaceQueryActionFB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrSpaceQueryActionFB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct SpaceQueryActionFB(i32);
 impl SpaceQueryActionFB {
     #[doc = "Tells the query to perform a load operation on any XrSpace returned by the query."]
@@ -2498,7 +2498,7 @@ impl fmt::Debug for SpaceQueryActionFB {
 }
 #[doc = "See [XrSpaceStorageLocationFB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrSpaceStorageLocationFB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct SpaceStorageLocationFB(i32);
 impl SpaceStorageLocationFB {
     #[doc = "Invalid storage location"]
@@ -2527,7 +2527,7 @@ impl fmt::Debug for SpaceStorageLocationFB {
 }
 #[doc = "See [XrSpacePersistenceModeFB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrSpacePersistenceModeFB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct SpacePersistenceModeFB(i32);
 impl SpacePersistenceModeFB {
     #[doc = "Invalid storage persistence"]
@@ -2553,7 +2553,7 @@ impl fmt::Debug for SpacePersistenceModeFB {
 }
 #[doc = "See [XrExternalCameraAttachedToDeviceOCULUS](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrExternalCameraAttachedToDeviceOCULUS)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct ExternalCameraAttachedToDeviceOCULUS(i32);
 impl ExternalCameraAttachedToDeviceOCULUS {
     #[doc = "External camera is at a fixed point in LOCAL space"]
@@ -2609,7 +2609,7 @@ impl fmt::Debug for PassthroughColorLutChannelsMETA {
 }
 #[doc = "See [XrPerformanceMetricsCounterUnitMETA](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrPerformanceMetricsCounterUnitMETA)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct PerformanceMetricsCounterUnitMETA(i32);
 impl PerformanceMetricsCounterUnitMETA {
     #[doc = "the performance counter unit is generic (unspecified)."]
@@ -2670,7 +2670,7 @@ impl fmt::Debug for FacialTrackingTypeHTC {
 }
 #[doc = "See [XrEyeExpressionHTC](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrEyeExpressionHTC)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct EyeExpressionHTC(i32);
 impl EyeExpressionHTC {
     pub const LEFT_BLINK: EyeExpressionHTC = Self(0i32);
@@ -2718,7 +2718,7 @@ impl fmt::Debug for EyeExpressionHTC {
 }
 #[doc = "See [XrLipExpressionHTC](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrLipExpressionHTC)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct LipExpressionHTC(i32);
 impl LipExpressionHTC {
     pub const JAW_RIGHT: LipExpressionHTC = Self(0i32);
@@ -2812,7 +2812,7 @@ impl fmt::Debug for LipExpressionHTC {
 }
 #[doc = "See [XrPassthroughFormHTC](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrPassthroughFormHTC)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct PassthroughFormHTC(i32);
 impl PassthroughFormHTC {
     #[doc = "Presents the passthrough with full of the entire screen."]
@@ -2838,7 +2838,7 @@ impl fmt::Debug for PassthroughFormHTC {
 }
 #[doc = "See [XrFoveationModeHTC](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrFoveationModeHTC)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct FoveationModeHTC(i32);
 impl FoveationModeHTC {
     #[doc = "No foveation"]
@@ -2870,7 +2870,7 @@ impl fmt::Debug for FoveationModeHTC {
 }
 #[doc = "See [XrFoveationLevelHTC](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrFoveationLevelHTC)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct FoveationLevelHTC(i32);
 impl FoveationLevelHTC {
     #[doc = "No foveation"]
@@ -2902,7 +2902,7 @@ impl fmt::Debug for FoveationLevelHTC {
 }
 #[doc = "See [XrLocalDimmingModeMETA](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrLocalDimmingModeMETA)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct LocalDimmingModeMETA(i32);
 impl LocalDimmingModeMETA {
     #[doc = "Local dimming is turned off by default for the current submitted frame. This is the same as not chaining XrLocalDimmingModeMETA."]
@@ -2928,7 +2928,7 @@ impl fmt::Debug for LocalDimmingModeMETA {
 }
 #[doc = "See [XrFaceExpressionFB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrFaceExpressionFB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct FaceExpressionFB(i32);
 impl FaceExpressionFB {
     pub const BROW_LOWERER_L: FaceExpressionFB = Self(0i32);
@@ -3076,7 +3076,7 @@ impl fmt::Debug for FaceExpressionFB {
 }
 #[doc = "See [XrFaceExpressionSetFB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrFaceExpressionSetFB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct FaceExpressionSetFB(i32);
 impl FaceExpressionSetFB {
     #[doc = "indicates that the created XrFaceTrackerFB tracks the set of blend shapes described by XrFaceExpressionFB enum, i.e. the xrGetFaceExpressionWeightsFB function returns an array of blend shapes with the count of XR_FACE_EXPRESSION_COUNT_FB and can: be indexed using XrFaceExpressionFB."]
@@ -3099,7 +3099,7 @@ impl fmt::Debug for FaceExpressionSetFB {
 }
 #[doc = "See [XrFaceConfidenceFB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrFaceConfidenceFB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct FaceConfidenceFB(i32);
 impl FaceConfidenceFB {
     pub const LOWER_FACE: FaceConfidenceFB = Self(0i32);
@@ -3125,7 +3125,7 @@ impl fmt::Debug for FaceConfidenceFB {
 }
 #[doc = "See [XrFaceExpression2FB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrFaceExpression2FB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct FaceExpression2FB(i32);
 impl FaceExpression2FB {
     pub const BROW_LOWERER_L: FaceExpression2FB = Self(0i32);
@@ -3287,7 +3287,7 @@ impl fmt::Debug for FaceExpression2FB {
 }
 #[doc = "See [XrFaceExpressionSet2FB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrFaceExpressionSet2FB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct FaceExpressionSet2FB(i32);
 impl FaceExpressionSet2FB {
     #[doc = "indicates that the created XrFaceTracker2FB tracks the set of blend shapes described by XrFaceExpression2FB enum, i.e. the xrGetFaceExpressionWeights2FB function returns an array of blend shapes with the count of XR_FACE_EXPRESSION2_COUNT_FB and can: be indexed using XrFaceExpression2FB."]
@@ -3310,7 +3310,7 @@ impl fmt::Debug for FaceExpressionSet2FB {
 }
 #[doc = "See [XrFaceTrackingDataSource2FB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrFaceTrackingDataSource2FB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct FaceTrackingDataSource2FB(i32);
 impl FaceTrackingDataSource2FB {
     #[doc = "face tracking uses visual data to estimate expressions. Face tracking may use audio to further improve the quality of face tracking."]
@@ -3336,7 +3336,7 @@ impl fmt::Debug for FaceTrackingDataSource2FB {
 }
 #[doc = "See [XrFaceConfidence2FB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrFaceConfidence2FB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct FaceConfidence2FB(i32);
 impl FaceConfidence2FB {
     pub const LOWER_FACE: FaceConfidence2FB = Self(0i32);
@@ -3362,7 +3362,7 @@ impl fmt::Debug for FaceConfidence2FB {
 }
 #[doc = "See [XrBodyJointFB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrBodyJointFB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct BodyJointFB(i32);
 impl BodyJointFB {
     pub const ROOT: BodyJointFB = Self(0i32);
@@ -3526,7 +3526,7 @@ impl fmt::Debug for BodyJointFB {
 }
 #[doc = "Describes the set of body joints to track when creating an XrBodyTrackerFB. - see [XrBodyJointSetFB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrBodyJointSetFB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct BodyJointSetFB(i32);
 impl BodyJointSetFB {
     #[doc = "Indicates that the created XrBodyTrackerFB tracks the set of body joints described by XrBodyJointFB enum, i.e. the xrLocateBodyJointsFB function returns an array of joint locations with the count of XR_BODY_JOINT_COUNT_FB and can be indexed using XrBodyJointFB."]
@@ -3549,7 +3549,7 @@ impl fmt::Debug for BodyJointSetFB {
 }
 #[doc = "See [XrEyePositionFB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrEyePositionFB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct EyePositionFB(i32);
 impl EyePositionFB {
     #[doc = "Specifies the position of the left eye."]
@@ -3600,7 +3600,7 @@ impl fmt::Debug for TrackingOptimizationSettingsDomainQCOM {
 }
 #[doc = "See [XrTrackingOptimizationSettingsHintQCOM](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrTrackingOptimizationSettingsHintQCOM)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct TrackingOptimizationSettingsHintQCOM(i32);
 impl TrackingOptimizationSettingsHintQCOM {
     #[doc = "Used by the application to indicate that it does not have a preference to optimize for. The run-time is understood to choose a balanced approach."]
@@ -3635,7 +3635,7 @@ impl fmt::Debug for TrackingOptimizationSettingsHintQCOM {
 }
 #[doc = "See [XrForceFeedbackCurlLocationMNDX](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrForceFeedbackCurlLocationMNDX)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct ForceFeedbackCurlLocationMNDX(i32);
 impl ForceFeedbackCurlLocationMNDX {
     #[doc = "force feedback for thumb curl"]
@@ -3670,7 +3670,7 @@ impl fmt::Debug for ForceFeedbackCurlLocationMNDX {
 }
 #[doc = "See [XrPlaneDetectionStateEXT](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrPlaneDetectionStateEXT)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct PlaneDetectionStateEXT(i32);
 impl PlaneDetectionStateEXT {
     pub const NONE: PlaneDetectionStateEXT = Self(0i32);
@@ -3700,7 +3700,7 @@ impl fmt::Debug for PlaneDetectionStateEXT {
 }
 #[doc = "See [XrPlaneDetectorOrientationEXT](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrPlaneDetectorOrientationEXT)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct PlaneDetectorOrientationEXT(i32);
 impl PlaneDetectorOrientationEXT {
     #[doc = "The detected plane is horizontal and faces upward (e.g. floor)."]
@@ -3732,7 +3732,7 @@ impl fmt::Debug for PlaneDetectorOrientationEXT {
 }
 #[doc = "See [XrPlaneDetectorSemanticTypeEXT](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrPlaneDetectorSemanticTypeEXT)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct PlaneDetectorSemanticTypeEXT(i32);
 impl PlaneDetectorSemanticTypeEXT {
     #[doc = "The runtime was unable to classify this plane."]
@@ -3767,7 +3767,7 @@ impl fmt::Debug for PlaneDetectorSemanticTypeEXT {
 }
 #[doc = "See [XrVirtualKeyboardLocationTypeMETA](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrVirtualKeyboardLocationTypeMETA)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct VirtualKeyboardLocationTypeMETA(i32);
 impl VirtualKeyboardLocationTypeMETA {
     #[doc = "Indicates that the application will provide the position and scale of the keyboard."]
@@ -3840,7 +3840,7 @@ impl fmt::Debug for VirtualKeyboardInputSourceMETA {
 }
 #[doc = "See [XrHeadsetFitStatusML](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrHeadsetFitStatusML)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct HeadsetFitStatusML(i32);
 impl HeadsetFitStatusML {
     #[doc = "Headset fit status not available for unknown reason."]
@@ -3872,7 +3872,7 @@ impl fmt::Debug for HeadsetFitStatusML {
 }
 #[doc = "See [XrEyeCalibrationStatusML](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrEyeCalibrationStatusML)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct EyeCalibrationStatusML(i32);
 impl EyeCalibrationStatusML {
     #[doc = "Eye calibration status not available for unknown reason."]
@@ -3904,7 +3904,7 @@ impl fmt::Debug for EyeCalibrationStatusML {
 }
 #[doc = "See [XrLocalizationMapStateML](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrLocalizationMapStateML)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct LocalizationMapStateML(i32);
 impl LocalizationMapStateML {
     #[doc = "The system is not localized into a map. Features like Spatial Anchors relying on localization will not work."]
@@ -3936,7 +3936,7 @@ impl fmt::Debug for LocalizationMapStateML {
 }
 #[doc = "See [XrLocalizationMapTypeML](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrLocalizationMapTypeML)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct LocalizationMapTypeML(i32);
 impl LocalizationMapTypeML {
     #[doc = "The system is localized into an On-Device map, published anchors are not shared between different devices."]
@@ -3962,7 +3962,7 @@ impl fmt::Debug for LocalizationMapTypeML {
 }
 #[doc = "See [XrLocalizationMapConfidenceML](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrLocalizationMapConfidenceML)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct LocalizationMapConfidenceML(i32);
 impl LocalizationMapConfidenceML {
     #[doc = "The localization map has poor confidence, systems relying on the localization map are likely to have poor performance."]
@@ -3994,7 +3994,7 @@ impl fmt::Debug for LocalizationMapConfidenceML {
 }
 #[doc = "See [XrMarkerDetectorProfileML](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrMarkerDetectorProfileML)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct MarkerDetectorProfileML(i32);
 impl MarkerDetectorProfileML {
     #[doc = "Tracker profile that covers standard use cases. If this does not suite the needs of the application try the other profiles listed below."]
@@ -4032,7 +4032,7 @@ impl fmt::Debug for MarkerDetectorProfileML {
 }
 #[doc = "See [XrMarkerTypeML](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrMarkerTypeML)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct MarkerTypeML(i32);
 impl MarkerTypeML {
     #[doc = "Aruco Marker detection and localization. The marker id of the Aruco marker is available via xrGetMarkerNumberML."]
@@ -4070,7 +4070,7 @@ impl fmt::Debug for MarkerTypeML {
 }
 #[doc = "See [XrMarkerArucoDictML](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrMarkerArucoDictML)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct MarkerArucoDictML(i32);
 impl MarkerArucoDictML {
     #[doc = "4 by 4 pixel Aruco marker dictionary with 50 IDs."]
@@ -4138,7 +4138,7 @@ impl fmt::Debug for MarkerArucoDictML {
 }
 #[doc = "See [XrMarkerAprilTagDictML](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrMarkerAprilTagDictML)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct MarkerAprilTagDictML(i32);
 impl MarkerAprilTagDictML {
     #[doc = "4 by 4 bits, minimum Hamming distance between any two codes = 5, 30 codes."]
@@ -4170,7 +4170,7 @@ impl fmt::Debug for MarkerAprilTagDictML {
 }
 #[doc = "See [XrMarkerDetectorFpsML](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrMarkerDetectorFpsML)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct MarkerDetectorFpsML(i32);
 impl MarkerDetectorFpsML {
     #[doc = "Low FPS."]
@@ -4202,7 +4202,7 @@ impl fmt::Debug for MarkerDetectorFpsML {
 }
 #[doc = "See [XrMarkerDetectorResolutionML](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrMarkerDetectorResolutionML)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct MarkerDetectorResolutionML(i32);
 impl MarkerDetectorResolutionML {
     #[doc = "Low Resolution."]
@@ -4231,7 +4231,7 @@ impl fmt::Debug for MarkerDetectorResolutionML {
 }
 #[doc = "See [XrMarkerDetectorCameraML](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrMarkerDetectorCameraML)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct MarkerDetectorCameraML(i32);
 impl MarkerDetectorCameraML {
     #[doc = "Single RGB camera."]
@@ -4257,7 +4257,7 @@ impl fmt::Debug for MarkerDetectorCameraML {
 }
 #[doc = "See [XrMarkerDetectorCornerRefineMethodML](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrMarkerDetectorCornerRefineMethodML)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct MarkerDetectorCornerRefineMethodML(i32);
 impl MarkerDetectorCornerRefineMethodML {
     #[doc = "No refinement. Inaccurate corners."]
@@ -4289,7 +4289,7 @@ impl fmt::Debug for MarkerDetectorCornerRefineMethodML {
 }
 #[doc = "See [XrMarkerDetectorFullAnalysisIntervalML](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrMarkerDetectorFullAnalysisIntervalML)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct MarkerDetectorFullAnalysisIntervalML(i32);
 impl MarkerDetectorFullAnalysisIntervalML {
     #[doc = "Detector analyzes every frame fully."]
@@ -4321,7 +4321,7 @@ impl fmt::Debug for MarkerDetectorFullAnalysisIntervalML {
 }
 #[doc = "See [XrMarkerDetectorStatusML](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrMarkerDetectorStatusML)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct MarkerDetectorStatusML(i32);
 impl MarkerDetectorStatusML {
     #[doc = "The marker detector is working on a new snapshot."]
@@ -4398,7 +4398,7 @@ impl fmt::Debug for HandEXT {
 }
 #[doc = "See [XrHandJointEXT](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrHandJointEXT)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct HandJointEXT(i32);
 impl HandJointEXT {
     pub const PALM: HandJointEXT = Self(0i32);
@@ -4470,7 +4470,7 @@ impl fmt::Debug for HandJointEXT {
 }
 #[doc = "See [XrHandJointSetEXT](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrHandJointSetEXT)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct HandJointSetEXT(i32);
 impl HandJointSetEXT {
     pub const DEFAULT: HandJointSetEXT = Self(0i32);
@@ -4544,7 +4544,7 @@ impl fmt::Debug for HandTrackingDataSourceEXT {
 }
 #[doc = "See [XrHandPoseTypeMSFT](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrHandPoseTypeMSFT)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct HandPoseTypeMSFT(i32);
 impl HandPoseTypeMSFT {
     pub const TRACKED: HandPoseTypeMSFT = Self(0i32);
@@ -4602,7 +4602,7 @@ impl fmt::Debug for SceneObjectTypeMSFT {
 }
 #[doc = "See [XrScenePlaneAlignmentTypeMSFT](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrScenePlaneAlignmentTypeMSFT)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct ScenePlaneAlignmentTypeMSFT(i32);
 impl ScenePlaneAlignmentTypeMSFT {
     pub const NON_ORTHOGONAL: ScenePlaneAlignmentTypeMSFT = Self(0i32);
@@ -4628,7 +4628,7 @@ impl fmt::Debug for ScenePlaneAlignmentTypeMSFT {
 }
 #[doc = "See [XrSceneComputeStateMSFT](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrSceneComputeStateMSFT)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct SceneComputeStateMSFT(i32);
 impl SceneComputeStateMSFT {
     pub const NONE: SceneComputeStateMSFT = Self(0i32);
@@ -4822,7 +4822,7 @@ impl fmt::Debug for SceneMarkerQRCodeSymbolTypeMSFT {
 }
 #[doc = "See [XrColorSpaceFB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrColorSpaceFB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct ColorSpaceFB(i32);
 impl ColorSpaceFB {
     pub const UNMANAGED: ColorSpaceFB = Self(0i32);
@@ -4858,7 +4858,7 @@ impl fmt::Debug for ColorSpaceFB {
 }
 #[doc = "See [XrFoveationLevelFB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrFoveationLevelFB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct FoveationLevelFB(i32);
 impl FoveationLevelFB {
     #[doc = "No foveation"]
@@ -4890,7 +4890,7 @@ impl fmt::Debug for FoveationLevelFB {
 }
 #[doc = "See [XrFoveationDynamicFB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrFoveationDynamicFB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct FoveationDynamicFB(i32);
 impl FoveationDynamicFB {
     #[doc = "Static foveation at the maximum desired level"]
@@ -4944,7 +4944,7 @@ impl fmt::Debug for ReprojectionModeMSFT {
 }
 #[doc = "See [XrHandForearmJointULTRALEAP](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrHandForearmJointULTRALEAP)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct HandForearmJointULTRALEAP(i32);
 impl HandForearmJointULTRALEAP {
     pub const PALM: HandForearmJointULTRALEAP = Self(0i32);
@@ -5018,7 +5018,7 @@ impl fmt::Debug for HandForearmJointULTRALEAP {
 }
 #[doc = "See [XrCompareOpFB](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrCompareOpFB)"]
 #[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq, Default)]
 pub struct CompareOpFB(i32);
 impl CompareOpFB {
     #[doc = "Comparison is never true."]
@@ -5847,7 +5847,7 @@ pub struct Rect2Di {
     pub extent: Extent2Di,
 }
 #[repr(C)]
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, Default, PartialEq)]
 #[doc = "See [XrNegotiateLoaderInfo](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrNegotiateLoaderInfo)"]
 pub struct NegotiateLoaderInfo {
     pub struct_type: LoaderInterfaceStructs,
@@ -10630,7 +10630,7 @@ impl FoveationApplyInfoHTC {
     pub const TYPE: StructureType = StructureType::FOVEATION_APPLY_INFO_HTC;
 }
 #[repr(C)]
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, Default, PartialEq)]
 #[doc = "See [XrFoveationConfigurationHTC](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrFoveationConfigurationHTC) - defined by [XR_HTC_foveation](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XR_HTC_foveation)"]
 pub struct FoveationConfigurationHTC {
     pub level: FoveationLevelHTC,
@@ -10814,7 +10814,7 @@ impl ForceFeedbackCurlApplyLocationsMNDX {
     pub const TYPE: StructureType = StructureType::FORCE_FEEDBACK_CURL_APPLY_LOCATIONS_MNDX;
 }
 #[repr(C)]
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, Default, PartialEq)]
 #[doc = "See [XrForceFeedbackCurlApplyLocationMNDX](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XrForceFeedbackCurlApplyLocationMNDX) - defined by [XR_MNDX_force_feedback_curl](https://www.khronos.org/registry/OpenXR/specs/1.1/html/xrspec.html#XR_MNDX_force_feedback_curl)"]
 pub struct ForceFeedbackCurlApplyLocationMNDX {
     pub location: ForceFeedbackCurlLocationMNDX,
