@@ -29,9 +29,12 @@ impl Entry {
     /// Available if the `linked` feature is enabled. You must ensure that the entry points are
     /// actually linked into the binary, e.g. by enabling the `static` feature or manually linking
     /// to an external loader or implementation.
+    ///
+    /// Needs an [`AndroidPlatformInfo`] to correctly initialize the loader on Android.
+    /// Other platforms can pass `()`.
     #[cfg(feature = "linked")]
-    pub fn linked() -> Self {
-        Self {
+    pub fn linked(platform_info: &impl PlatformInfo) -> Result<Self> {
+        let entry = Self {
             inner: Arc::new(Inner {
                 raw: RawEntry {
                     get_instance_proc_addr: sys::get_instance_proc_addr,
@@ -43,7 +46,9 @@ impl Entry {
                 #[cfg(feature = "loaded")]
                 _lib_guard: None,
             }),
-        }
+        };
+        platform_info.init_loader(&entry)?;
+        Ok(entry)
     }
 
     /// Load entry points at run time from the dynamic library `openxr_loader` according to the
@@ -51,45 +56,55 @@ impl Entry {
     ///
     /// Available if the `loaded` feature is enabled.
     ///
+    /// Needs an [`AndroidPlatformInfo`] to correctly initialize the loader on Android.
+    /// Other platforms can pass `()`.
+    ///
     /// # Safety
     ///
     /// The OpenXR loader shared library in the dynamic loader's search path must conform to the
     /// OpenXR specification.
     #[cfg(feature = "loaded")]
-    pub unsafe fn load() -> std::result::Result<Self, LoadError> {
-        unsafe {
-            #[cfg(target_os = "windows")]
-            const PATH: &str = "openxr_loader.dll";
-            #[cfg(target_os = "macos")]
-            const PATH: &str = "libopenxr_loader.dylib";
-            #[cfg(not(any(target_os = "windows", target_os = "macos")))]
-            const PATH: &str = "libopenxr_loader.so";
-            Self::load_from(Path::new(PATH))
-        }
+    pub unsafe fn load(platform_info: &impl PlatformInfo) -> std::result::Result<Self, EntryError> {
+        #[cfg(target_os = "windows")]
+        const PATH: &str = "openxr_loader.dll";
+        #[cfg(target_os = "macos")]
+        const PATH: &str = "libopenxr_loader.dylib";
+        #[cfg(not(any(target_os = "windows", target_os = "macos")))]
+        const PATH: &str = "libopenxr_loader.so";
+
+        unsafe { Self::load_from(Path::new(PATH), platform_info) }
     }
 
     /// Load entry points at run time from the dynamic library identified by `path`
     ///
     /// Available if the `loaded` feature is enabled.
     ///
+    /// Needs an [`AndroidPlatformInfo`] to correctly initialize the loader on Android.
+    /// Other platforms can pass `()`.
+    ///
     /// # Safety
     ///
     /// `path` must be a shared library that provides OpenXR-compliant definitions for every core
     /// OpenXR entry point.
     #[cfg(feature = "loaded")]
-    pub unsafe fn load_from(path: &Path) -> std::result::Result<Self, LoadError> {
-        unsafe {
-            let lib = Library::new(path).map_err(LoadError)?;
-            Ok(Self {
+    pub unsafe fn load_from(
+        path: &Path,
+        platform_info: &impl PlatformInfo,
+    ) -> std::result::Result<Self, EntryError> {
+        let entry = unsafe {
+            let lib = Library::new(path).map_err(|err| EntryError::Load(LoadError(err)))?;
+            Self {
                 inner: Arc::new(Inner {
                     raw: RawEntry {
                         get_instance_proc_addr: *lib
                             .get(b"xrGetInstanceProcAddr\0")
-                            .map_err(LoadError)?,
-                        create_instance: *lib.get(b"xrCreateInstance\0").map_err(LoadError)?,
+                            .map_err(|err| EntryError::Load(LoadError(err)))?,
+                        create_instance: *lib
+                            .get(b"xrCreateInstance\0")
+                            .map_err(|err| EntryError::Load(LoadError(err)))?,
                         enumerate_instance_extension_properties: *lib
                             .get(b"xrEnumerateInstanceExtensionProperties\0")
-                            .map_err(LoadError)?,
+                            .map_err(|err| EntryError::Load(LoadError(err)))?,
                         enumerate_api_layer_properties: lib
                             .get(b"xrEnumerateApiLayerProperties\0")
                             .map(|s| *s)
@@ -97,11 +112,16 @@ impl Entry {
                     },
                     _lib_guard: Some(lib),
                 }),
-            })
-        }
+            }
+        };
+        platform_info.init_loader(&entry).map_err(EntryError::Xr)?;
+        Ok(entry)
     }
 
     /// Load entry points using an arbitrary `xrGetInstanceProcAddr` implementation
+    ///
+    /// Needs an [`AndroidPlatformInfo`] to correctly initialize the loader on Android.
+    /// Other platforms can pass `()`.
     ///
     /// # Safety
     ///
@@ -110,9 +130,10 @@ impl Entry {
     #[allow(clippy::missing_transmute_annotations)]
     pub unsafe fn from_get_instance_proc_addr(
         get_instance_proc_addr: sys::pfn::GetInstanceProcAddr,
+        platform_info: &impl PlatformInfo,
     ) -> Result<Self> {
-        unsafe {
-            Ok(Self {
+        let entry = unsafe {
+            Self {
                 inner: Arc::new(Inner {
                     raw: RawEntry {
                         get_instance_proc_addr,
@@ -139,8 +160,10 @@ impl Entry {
                     #[cfg(feature = "loaded")]
                     _lib_guard: None,
                 }),
-            })
-        }
+            }
+        };
+        platform_info.init_loader(&entry)?;
+        Ok(entry)
     }
 
     /// Access the raw function pointers
@@ -158,31 +181,11 @@ impl Entry {
         unsafe { get_instance_proc_addr_helper(self.fp().get_instance_proc_addr, instance, name) }
     }
 
-    /// Initialize Android loader. This must be called before `create_instance()`.
-    #[cfg(target_os = "android")]
-    pub fn initialize_android_loader(&self) -> Result<()> {
-        let loader_init = unsafe { raw::LoaderInitKHR::load(self, sys::Instance::NULL)? };
-
-        let context = ndk_context::android_context();
-
-        let loader_info = sys::LoaderInitInfoAndroidKHR {
-            ty: sys::LoaderInitInfoAndroidKHR::TYPE,
-            next: ptr::null(),
-            application_vm: context.vm(),
-            application_context: context.context(),
-        };
-
-        unsafe {
-            cvt((loader_init.initialize_loader)(
-                &loader_info as *const _ as _,
-            ))?;
-        }
-
-        Ok(())
-    }
-
-    /// Create an OpenXR instance with certain extensions enabled. Android support can be enabled by
-    /// setting `khr_android_create_instance` to `true`.
+    /// Create an OpenXR instance with certain extensions enabled.
+    ///
+    /// On Android, pass [`AndroidPlatformInfo`] as `platform_info`
+    /// and set `khr_android_create_instance` to `true`.
+    /// On other platforms, pass `()`.
     ///
     /// Most applications will want to enable at least one graphics API extension
     /// (e.g. `khr_vulkan_enable2`) so that a `Session` can be created for rendering.
@@ -191,6 +194,7 @@ impl Entry {
         app_info: &ApplicationInfo,
         required_extensions: &ExtensionSet,
         layers: &[&str],
+        platform_info: &impl PlatformInfo,
     ) -> Result<Instance> {
         assert!(
             app_info.application_name.len() < sys::MAX_APPLICATION_NAME_SIZE,
@@ -216,29 +220,9 @@ impl Entry {
             .map(|x| x.as_ptr() as *const _)
             .collect::<Vec<_>>();
 
-        #[cfg(not(target_os = "android"))]
-        let next = ptr::null();
-        #[cfg(target_os = "android")]
-        let android_info = {
-            let context = ndk_context::android_context();
-
-            sys::InstanceCreateInfoAndroidKHR {
-                ty: sys::InstanceCreateInfoAndroidKHR::TYPE,
-                next: ptr::null(),
-                application_vm: context.vm(),
-                application_activity: context.context(),
-            }
-        };
-        #[cfg(target_os = "android")]
-        let next = if required_extensions.khr_android_create_instance {
-            &android_info as *const _ as _
-        } else {
-            ptr::null()
-        };
-
         let mut info = sys::InstanceCreateInfo {
             ty: sys::InstanceCreateInfo::TYPE,
-            next,
+            next: ptr::null_mut(),
             create_flags: Default::default(),
             application_info: sys::ApplicationInfo {
                 application_name: [0; sys::MAX_APPLICATION_NAME_SIZE],
@@ -258,9 +242,7 @@ impl Entry {
         );
         place_cstr(&mut info.application_info.engine_name, app_info.engine_name);
         unsafe {
-            let mut handle = sys::Instance::NULL;
-            cvt((self.fp().create_instance)(&info, &mut handle))?;
-
+            let handle = platform_info.create_instance(self, info)?;
             let exts = InstanceExtensions::load(self, handle, required_extensions)?;
             Instance::from_raw(self.clone(), handle, exts)
         }
@@ -360,6 +342,36 @@ pub struct RawEntry {
     pub enumerate_api_layer_properties: sys::pfn::EnumerateApiLayerProperties,
 }
 
+/// An error encountered while creating an [`Entry`]
+#[cfg(feature = "loaded")]
+#[derive(Debug)]
+pub enum EntryError {
+    Load(LoadError),
+    Xr(sys::Result),
+}
+
+#[cfg(feature = "loaded")]
+impl fmt::Display for EntryError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            EntryError::Load(_) => f.write_str(
+                "failed loading OpenXR loader or a required symbol from dynamic library",
+            ),
+            EntryError::Xr(_) => f.write_str("failed initializing OpenXR loader"),
+        }
+    }
+}
+
+#[cfg(feature = "loaded")]
+impl std::error::Error for EntryError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            EntryError::Load(err) => Some(err),
+            EntryError::Xr(err) => Some(err),
+        }
+    }
+}
+
 /// An error encountered while loading entry points from a dynamic library at run time
 #[cfg(feature = "loaded")]
 pub struct LoadError(libloading::Error);
@@ -413,4 +425,106 @@ pub struct ApiLayerProperties {
     pub spec_version: Version,
     pub layer_version: u32,
     pub description: String,
+}
+
+/// # Safety
+///
+/// [`PlatformInfo::create_instance`] must return a valid [`sys::Instance`] handle, or an error.
+pub unsafe trait PlatformInfo {
+    /// # Safety
+    ///
+    /// `info` must be valid to be passed to `xrCreateInstance`
+    unsafe fn create_instance(
+        &self,
+        entry: &Entry,
+        info: sys::InstanceCreateInfo,
+    ) -> Result<sys::Instance>;
+
+    /// Callback for platform-specific loader initialization.
+    fn init_loader(&self, _entry: &Entry) -> Result<()> {
+        Ok(())
+    }
+}
+
+unsafe impl PlatformInfo for () {
+    unsafe fn create_instance(
+        &self,
+        entry: &Entry,
+        info: sys::InstanceCreateInfo,
+    ) -> Result<sys::Instance> {
+        let mut handle = sys::Instance::NULL;
+        // SAFETY: guaranteed by the caller
+        cvt(unsafe { (entry.fp().create_instance)(&info, &mut handle) })?;
+        Ok(handle)
+    }
+}
+
+#[cfg(target_os = "android")]
+pub struct AndroidPlatformInfo {
+    activity: *mut std::ffi::c_void,
+}
+
+#[cfg(target_os = "android")]
+impl AndroidPlatformInfo {
+    /// Creates a struct holding Android specific information for instance creation.
+    ///
+    /// Some information will also be fetched from [`ndk_context`],
+    /// so your NDK glue code has to initialize it.
+    ///
+    /// # Safety
+    ///
+    /// The `activity` pointer has to be a valid JNI reference to an `android.app.Activity`,
+    /// as required by the [XR_KHR_android_create_instance] extension.
+    ///
+    /// [XR_KHR_android_create_instance]: https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#XR_KHR_android_create_instance
+    pub unsafe fn new(activity: *mut std::ffi::c_void) -> Self {
+        Self { activity }
+    }
+}
+
+#[cfg(target_os = "android")]
+unsafe impl PlatformInfo for AndroidPlatformInfo {
+    unsafe fn create_instance(
+        &self,
+        entry: &Entry,
+        mut info: sys::InstanceCreateInfo,
+    ) -> Result<sys::Instance> {
+        let context = ndk_context::android_context();
+        let mut android_info = sys::InstanceCreateInfoAndroidKHR {
+            ty: sys::InstanceCreateInfoAndroidKHR::TYPE,
+            next: info.next,
+            application_vm: context.vm(),
+            application_activity: self.activity,
+        };
+        info.next = (&mut android_info as *mut sys::InstanceCreateInfoAndroidKHR).cast();
+
+        let mut handle = sys::Instance::NULL;
+        // SAFETY: `info` was guaranteed to be valid by the caller,
+        // and a valid struct was added into the next chain
+        cvt(unsafe { (entry.fp().create_instance)(&info, &mut handle) })?;
+        Ok(handle)
+    }
+
+    fn init_loader(&self, entry: &Entry) -> Result<()> {
+        let loader_init = unsafe { raw::LoaderInitKHR::load(entry, sys::Instance::NULL)? };
+
+        let context = ndk_context::android_context();
+
+        let loader_info = sys::LoaderInitInfoAndroidKHR {
+            ty: sys::LoaderInitInfoAndroidKHR::TYPE,
+            next: ptr::null(),
+            application_vm: context.vm(),
+            application_context: self.activity,
+        };
+
+        // The loader init extension doesn't forbid calling initialization multiple times,
+        // and the Khronos Loader implementation handles it correctly.
+        unsafe {
+            cvt((loader_init.initialize_loader)(
+                &loader_info as *const _ as _,
+            ))?;
+        }
+
+        Ok(())
+    }
 }

@@ -31,16 +31,18 @@ pub fn main() {
     })
     .expect("setting Ctrl-C handler");
 
+    #[cfg(not(target_os = "android"))]
+    let platform_info = ();
+    #[cfg(target_os = "android")]
+    let platform_info =
+        unsafe { openxr::AndroidPlatformInfo::new(ndk_glue::native_activity().activity().cast()) };
     #[cfg(feature = "static")]
-    let entry = xr::Entry::linked();
+    let entry = xr::Entry::linked(&platform_info).unwrap();
     #[cfg(not(feature = "static"))]
     let entry = unsafe {
-        xr::Entry::load()
+        xr::Entry::load(&platform_info)
             .expect("couldn't find the OpenXR loader; try enabling the \"static\" feature")
     };
-
-    #[cfg(target_os = "android")]
-    entry.initialize_android_loader().unwrap();
 
     // OpenXR will fail to initialize if we ask for an extension that OpenXR can't provide! So we
     // need to check all our extensions before initializing OpenXR with them. Note that even if the
@@ -72,6 +74,7 @@ pub fn main() {
             },
             &enabled_extensions,
             &[],
+            &platform_info,
         )
         .unwrap();
     let instance_props = xr_instance.properties().unwrap();
@@ -257,13 +260,21 @@ pub fn main() {
                         vk::PipelineShaderStageCreateInfo {
                             stage: vk::ShaderStageFlags::VERTEX,
                             module: vert,
-                            p_name: c"main".as_ptr(),
+                            #[allow(
+                                clippy::manual_c_str_literals,
+                                reason = "ndk_glue::main cannot parse c string literals"
+                            )]
+                            p_name: b"main\0".as_ptr() as _,
                             ..Default::default()
                         },
                         vk::PipelineShaderStageCreateInfo {
                             stage: vk::ShaderStageFlags::FRAGMENT,
                             module: frag,
-                            p_name: c"main".as_ptr(),
+                            #[allow(
+                                clippy::manual_c_str_literals,
+                                reason = "ndk_glue::main cannot parse c string literals"
+                            )]
+                            p_name: b"main\0".as_ptr() as _,
                             ..Default::default()
                         },
                     ])
